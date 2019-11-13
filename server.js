@@ -6,9 +6,38 @@ var bodyParser = require('body-parser');
 
 let articles = [];
 
+var db,url = "mongodb+srv://sohanUser:masbahul12345@cluster0-yjzcp.mongodb.net/test?retryWrites=true&w=majority"
+
+mongo.MongoClient.connect(url,
+  
+  {userNewUrlParse:true, useUnifiedTopology:true},
+
+  function(err, clientnode){
+    if(err){
+      console.log('Could not connect to MongoDb')
+    }
+    else{
+      db = client.db('node-cw9')
+    }
+
+  })
+
+
+var save = function(form_data){
+  db.createCollection('articles', function(err, collection){
+    var collection = db.collection('articles')
+    collection.save(form_data);
+
+  })
+
+
+}
+
 app.use(bodyParser.urlencoded({extended:true}));
 
 app.post('/new_article', function(request, response){
+
+  save(request.body)
   articles.push(request.body);
   console.log(articles);
   response.json({msg: "Successfully recieved"});
